@@ -13,68 +13,134 @@ const App: React.FC = () => {
     setInput('');
     setLoading(true);
     
-    try {
-      // Simple echo response for testing
-      const assistantMessage = { role: 'assistant', content: `You said: ${input}` };
+    setTimeout(() => {
+      const assistantMessage = { role: 'assistant', content: `Echo: ${input}` };
       setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
       setLoading(false);
-    }
+    }, 500);
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950 text-slate-100">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100vh',
+      backgroundColor: '#0f172a',
+      color: '#f1f5f9',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: '20px',
+        borderBottom: '1px solid #1e293b',
+        backgroundColor: '#020617',
+        textAlign: 'center'
+      }}>
+        <h1 style={{ margin: '0', fontSize: '24px', fontWeight: 'bold' }}>PromptMaster AI Assistant</h1>
+      </div>
+
+      {/* Messages Area */}
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+      }}>
         {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold mb-4">PromptMaster AI</h1>
-              <p className="text-slate-400">Start a conversation...</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+            <div style={{ textAlign: 'center', color: '#94a3b8' }}>
+              <p style={{ fontSize: '18px', margin: '0' }}>Start a conversation...</p>
+              <p style={{ fontSize: '14px', marginTop: '10px' }}>Type a message and press Send</p>
             </div>
           </div>
         ) : (
           messages.map((msg, idx) => (
-            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                msg.role === 'user' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-800 text-slate-100'
-              }`}>
+            <div key={idx} style={{
+              display: 'flex',
+              justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start'
+            }}>
+              <div style={{
+                maxWidth: '70%',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                backgroundColor: msg.role === 'user' ? '#2563eb' : '#1e293b',
+                color: msg.role === 'user' ? '#ffffff' : '#e2e8f0',
+                wordWrap: 'break-word'
+              }}>
                 {msg.content}
               </div>
             </div>
           ))
         )}
         {loading && (
-          <div className="flex justify-start">
-            <div className="bg-slate-800 px-4 py-2 rounded-lg">
-              <div className="animate-pulse">Thinking...</div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-start'
+          }}>
+            <div style={{
+              padding: '12px 16px',
+              borderRadius: '8px',
+              backgroundColor: '#1e293b',
+              color: '#cbd5e1'
+            }}>
+              Thinking...
             </div>
           </div>
         )}
       </div>
-      
-      <div className="border-t border-slate-800 p-4 bg-slate-900">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your message..."
-            className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            disabled={loading}
-          />
-          <button
-            onClick={handleSend}
-            disabled={loading || !input.trim()}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
-          >
-            Send
-          </button>
-        </div>
+
+      {/* Input Area */}
+      <div style={{
+        borderTop: '1px solid #1e293b',
+        padding: '16px',
+        backgroundColor: '#0f172a',
+        display: 'flex',
+        gap: '12px'
+      }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          placeholder="Type your message..."
+          style={{
+            flex: 1,
+            padding: '12px 16px',
+            borderRadius: '8px',
+            border: '1px solid #334155',
+            backgroundColor: '#1e293b',
+            color: '#f1f5f9',
+            fontSize: '14px',
+            outline: 'none',
+            fontFamily: 'Arial, sans-serif'
+          }}
+          disabled={loading}
+        />
+        <button
+          onClick={handleSend}
+          disabled={loading || !input.trim()}
+          style={{
+            padding: '12px 24px',
+            borderRadius: '8px',
+            border: 'none',
+            backgroundColor: loading || !input.trim() ? '#475569' : '#2563eb',
+            color: '#ffffff',
+            fontSize: '14px',
+            fontWeight: '600',
+            cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
+            transition: 'background-color 0.2s',
+            fontFamily: 'Arial, sans-serif'
+          }}
+        >
+          Send
+        </button>
       </div>
     </div>
   );
